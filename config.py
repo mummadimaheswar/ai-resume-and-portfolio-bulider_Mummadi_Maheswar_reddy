@@ -27,7 +27,14 @@ class Config:
     
     # ==================== API SETTINGS ====================
     # Prefer environment variables; fall back to Streamlit secrets (for Cloud)
-    GEMINI_API_KEY = os.getenv('GEMINI_API_KEY') or _get_streamlit_secret('GEMINI_API_KEY', '')
+    # Accept GOOGLE_API_KEY as an alias for GEMINI_API_KEY
+    GEMINI_API_KEY = (
+        os.getenv('GEMINI_API_KEY')
+        or os.getenv('GOOGLE_API_KEY')
+        or _get_streamlit_secret('GEMINI_API_KEY', '')
+        or _get_streamlit_secret('GOOGLE_API_KEY', '')
+        or ''
+    )
     # Default to a widely-available model to avoid 404s on some endpoints
     GEMINI_MODEL = os.getenv('GEMINI_MODEL') or _get_streamlit_secret('GEMINI_MODEL', 'gemini-1.5-flash') or 'gemini-1.5-flash'
     
