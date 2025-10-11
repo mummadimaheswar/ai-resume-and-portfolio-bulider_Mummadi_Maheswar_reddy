@@ -7,6 +7,18 @@ import os
 from dotenv import load_dotenv
 from pathlib import Path
 
+# Optional: support Streamlit Cloud secrets
+def _get_streamlit_secret(name: str, default: str = "") -> str:
+    try:
+        import streamlit as st  # Imported lazily to avoid hard dependency
+        try:
+            # st.secrets behaves like a dict on Streamlit Cloud/local
+            return st.secrets.get(name, default)
+        except Exception:
+            return default
+    except Exception:
+        return default
+
 # Load environment variables from .env file
 load_dotenv()
 
@@ -14,8 +26,10 @@ class Config:
     """Central configuration for the application"""
     
     # ==================== API SETTINGS ====================
-    GEMINI_API_KEY = os.getenv('GEMINI_API_KEY', '')
-    GEMINI_MODEL = os.getenv('GEMINI_MODEL', 'gemini-1.5-flash')
+    # Prefer environment variables; fall back to Streamlit secrets (for Cloud)
+    GEMINI_API_KEY = os.getenv('GEMINI_API_KEY') or _get_streamlit_secret('GEMINI_API_KEY', '')
+    # Default to a widely-available model to avoid 404s on some endpoints
+    GEMINI_MODEL = os.getenv('GEMINI_MODEL') or _get_streamlit_secret('GEMINI_MODEL', 'gemini-1.5-flash') or 'gemini-1.5-flash'
     
     # ==================== FILE PROCESSING ====================
     MAX_FILE_SIZE = 10 * 1024 * 1024  # 10MB
