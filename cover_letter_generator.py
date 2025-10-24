@@ -1,7 +1,3 @@
-"""
-AI-Powered Cover Letter Generator
-Creates tailored cover letters for job applications
-"""
 
 import google.generativeai as genai
 from typing import Dict
