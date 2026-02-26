@@ -307,6 +307,3 @@ Follow their Python app deployment guides and set the `GEMINI_API_KEY` environme
 
 ---
 
-**Made with ❤️ for students worldwide**
-
-*Last updated: October 2025*
